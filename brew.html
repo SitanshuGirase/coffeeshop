@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Method — Vesper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="brew">
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="Vesper Home">
+      <span class="nav-mark">⬤</span>
+      <span class="nav-name">VESPER</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-page="home">Entrance</a>
+      <a href="menu.html" class="nav-link" data-page="menu">Rituals</a>
+      <a href="story.html" class="nav-link" data-page="story">Lineage</a>
+      <a href="brew.html" class="nav-link active" data-page="brew">Method</a>
+      <a href="visit.html" class="nav-link" data-page="visit">Find Us</a>
+    </div>
+    <div class="nav-time" aria-live="polite" aria-atomic="true">
+      <span class="time-label">It is</span>
+      <time class="time-value" datetime="">--:--</time>
+      <span class="time-phase"></span>
+    </div>
+  </nav>
+
+  <main class="main">
+    <header class="page-header">
+      <h1 class="page-title">Method</h1>
+      <p class="page-subtitle">Precision is not rigidity. It's the framework that lets intuition work.</p>
+    </header>
+
+    <section class="brew-selector" aria-labelledby="brew-select-title">
+      <h2 id="brew-select-title" class="section-title">Choose Your Method</h2>
+      <div class="method-tabs" role="tablist" aria-label="Brew methods">
+        <button class="method-tab active" role="tab" aria-selected="true" aria-controls="panel-kalita" data-method="kalita">Kalita Wave</button>
+        <button class="method-tab" role="tab" aria-selected="false" aria-controls="panel-v60" data-method="v60">V60</button>
+        <button class="method-tab" role="tab" aria-selected="false" aria-controls="panel-espresso" data-method="espresso">Espresso</button>
+        <button class="method-tab" role="tab" aria-selected="false" aria-controls="panel-cold" data-method="cold">Cold Brew</button>
+        <button class="method-tab" role="tab" aria-selected="false" aria-controls="panel-aeropress" data-method="aeropress">AeroPress</button>
+      </div>
+    </section>
+
+    <section class="brew-panel active" id="panel-kalita" role="tabpanel" aria-labelledby="kalita-title">
+      <header class="method-header">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+        </div>
+        <div>
+          <h2 id="kalita-title" class="method-name">Kalita Wave 185</h2>
+          <p class="method-desc">Flat-bottom. Three holes. Even extraction. The most forgiving path to clarity.</p>
+          <div class="method-tags">
+            <span class="tag">Morning</span>
+            <span class="tag">Light–Medium Roast</span>
+            <span class="tag">High Clarity</span>
+            <span class="tag">Low Risk</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="method-content">
+        <div class="recipe-card">
+          <h3>Our Recipe</h3>
+          <dl class="recipe-specs">
+            <div class="spec-row">
+              <dt>Dose</dt><dd>18g</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Water</dt><dd>270g (1:15)</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Temp</dt><dd>93°C / 200°F</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Grind</dt><dd>Medium-fine (sea salt)</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Filter</dt><dd>Kalita 185 white</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Target Time</dt><dd>2:30–2:45</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="steps-card">
+          <h3>Procedure</h3>
+          <ol class="brew-steps">
+            <li data-step="1">
+              <span class="step-time">0:00</span>
+              <span class="step-action">Place filter, rinse thoroughly with hot water. Discard rinse water.</span>
+            </li>
+            <li data-step="2">
+              <span class="step-time">0:15</span>
+              <span class="step-action">Add 18g coffee. Shake gently to level. Create small divot in center.</span>
+            </li>
+            <li data-step="3">
+              <span class="step-time">0:30</span>
+              <span class="step-action"><strong>Bloom:</strong> Pour 40g water in slow spiral. Start center, work outward. All grounds wet.</span>
+            </li>
+            <li data-step="4">
+              <span class="step-time">1:00</span>
+              <span class="step-action"><strong>First pour:</strong> 110g total (70g more). Slow concentric circles. Maintain 2cm water level.</span>
+            </li>
+            <li data-step="5">
+              <span class="step-time">1:45</span>
+              <span class="step-action"><strong>Final pour:</strong> 270g total (160g more). Same spiral. Finish at 2:15.</span>
+            </li>
+            <li data-step="6">
+              <span class="step-time">2:30</span>
+              <span class="step-action">Drawdown complete. Remove dripper. Swirl carafe. Serve immediately.</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="tips-card">
+          <h3>Marina's Notes</h3>
+          <ul class="tips-list">
+            <li>Flat bottom = even flow. Don't pour fast to "catch up."</li>
+            <li>If drawdown &gt; 3:00, grind coarser. If &lt; 2:15, finer.</li>
+            <li>Water at 93°C extracts sweetness. 96°C extracts bitterness.</li>
+            <li>Rinse the filter. Paper taste is real. Your palate knows.</li>
+            <li>This method forgives. But it rewards precision.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="brew-panel" id="panel-v60" role="tabpanel" aria-labelledby="v60-title" hidden>
+      <header class="method-header">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 21l-6-6m6-6v-4.8c0-.9-.7-1.7-1.5-1.7H5.5a1.5 1.5 0 0 0-1.5 1.5V21"/><path d="M3 3l18 18"/></svg>
+        </div>
+        <div>
+          <h2 id="v60-title" class="method-name">Hario V60 02</h2>
+          <p class="method-desc">Conical. Single large hole. Spiral ribs. High clarity, high demand. For the focused morning.</p>
+          <div class="method-tags">
+            <span class="tag">Morning</span>
+            <span class="tag">Light Roast</span>
+            <span class="tag">Highest Clarity</span>
+            <span class="tag">High Skill</span>
+          </div>
+        </div>
+      </header>
+      <div class="method-content">
+        <div class="recipe-card">
+          <h3>Our Recipe</h3>
+          <dl class="recipe-specs">
+            <div class="spec-row"><dt>Dose</dt><dd>20g</dd></div>
+            <div class="spec-row"><dt>Water</dt><dd>300g (1:15)</dd></div>
+            <div class="spec-row"><dt>Temp</dt><dd>94°C / 201°F</dd></div>
+            <div class="spec-row"><dt>Grind</dt><dd>Medium-fine (table salt)</dd></div>
+            <div class="spec-row"><dt>Filter</dt><dd>V60 02 white</dd></div>
+            <div class="spec-row"><dt>Target Time</dt><dd>2:15–2:30</dd></div>
+          </dl>
+        </div>
+        <div class="steps-card">
+          <h3>Procedure</h3>
+          <ol class="brew-steps">
+            <li data-step="1"><span class="step-time">0:00</span><span class="step-action">Rinse filter thoroughly. Discard water. Preheat dripper and server.</span></li>
+            <li data-step="2"><span class="step-time">0:15</span><span class="step-action">Add 20g coffee. Tap to level. Center divot.</span></li>
+            <li data-step="3"><span class="step-time">0:30</span><span class="step-action"><strong>Bloom:</strong> 50g water. Spiral out. 30s. No dry spots.</span></li>
+            <li data-step="4"><span class="step-time">1:00</span><span class="step-action"><strong>Main pour:</strong> To 300g. Continuous slow spiral. Center to edge to center. Finish 1:45.</span></li>
+            <li data-step="5"><span class="step-time">2:15</span><span class="step-action">Drawdown. Swirl. Serve.</span></li>
+          </ol>
+        </div>
+        <div class="tips-card">
+          <h3>Priya's Notes</h3>
+          <ul class="tips-list">
+            <li>Single hole = flow control is yours. Pour speed = extraction.</li>
+            <li>Spiral ribs prevent channeling. But only if you pour evenly.</li>
+            <li>Light roasts need higher temp. 94°C minimum.</li>
+            <li>If it stalls, your grind is too fine. If it rushes, too coarse.</li>
+            <li>This method exposes. The bean. The roast. The pourer.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="brew-panel" id="panel-espresso" role="tabpanel" aria-labelledby="espresso-title" hidden>
+      <header class="method-header">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v20M16 2v20M3 8h18M3 16h18"/></svg>
+        </div>
+        <div>
+          <h2 id="espresso-title" class="method-name">Espresso · La Marzocco Linea PB</h2>
+          <p class="method-desc">Pressure. Precision. 9 bar. 25–30s. The most variable method. The most rewarding.</p>
+          <div class="method-tags">
+            <span class="tag">All Day</span>
+            <span class="tag">Medium–Dark Roast</span>
+            <span class="tag">Body & Texture</span>
+            <span class="tag">Highest Skill</span>
+          </div>
+        </div>
+      </header>
+      <div class="method-content">
+        <div class="recipe-card">
+          <h3>Our Recipe</h3>
+          <dl class="recipe-specs">
+            <div class="spec-row"><dt>Basket</dt><dd>18g VST</dd></div>
+            <div class="spec-row"><dt>Dose</dt><dd>18.5g ±0.1g</dd></div>
+            <div class="spec-row"><dt>Yield</dt><dd>37g (1:2)</dd></div>
+            <div class="spec-row"><dt>Time</dt><dd>27–30s</dd></div>
+            <div class="spec-row"><dt>Temp</dt><dd>93°C</dd></div>
+            <div class="spec-row"><dt>Pressure</dt><dd>9 bar</dd></div>
+          </dl>
+        </div>
+        <div class="steps-card">
+          <h3>Procedure</h3>
+          <ol class="brew-steps">
+            <li data-step="1"><span class="step-time">—</span><span class="step-action">Purge group. Dry basket. Distribute (WDT). Tamp level, 15kg pressure.</span></li>
+            <li data-step="2"><span class="step-time">0:00</span><span class="step-action">Lock. Start shot + timer simultaneously.</span></li>
+            <li data-step="3"><span class="step-time">0:05–0:08</span><span class="step-action">First drops. Dark, viscous. Mouse tails.</span></li>
+            <li data-step="4"><span class="step-time">0:15</span><span class="step-action">Steady stream. Golden crema forming. Color lightens.</span></li>
+            <li data-step="5"><span class="step-time">0:27</span><span class="step-action">Blonding begins. Stop at 37g. Serve immediately.</span></li>
+          </ol>
+        </div>
+        <div class="tips-card">
+          <h3>James's Notes</h3>
+          <ul class="tips-list">
+            <li>Espresso is a 4-variable equation. Change one, adjust others.</li>
+            <li>Sour = under-extracted. Grind finer / dose up / yield down.</li>
+            <li>Bitter = over-extracted. Grind coarser / dose down / yield up.</li>
+            <li>Channeling = uneven puck. WDT every shot. No exceptions.</li>
+            <li>We dial in at 06:00. Re-check at 11:00. Humidity changes everything.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="brew-panel" id="panel-cold" role="tabpanel" aria-labelledby="cold-title" hidden>
+      <header class="method-header">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v12M6 12h12"/></svg>
+        </div>
+        <div>
+          <h2 id="cold-title" class="method-name">Cold Brew · 18-Hour Immersion</h2>
+          <p class="method-desc">Time replaces heat. No acid. No bite. Pure sweetness. Afternoon only.</p>
+          <div class="method-tags">
+            <span class="tag">Afternoon</span>
+            <span class="tag">Medium Roast</span>
+            <span class="tag">Sweetness</span>
+            <span class="tag">Zero Skill</span>
+          </div>
+        </div>
+      </header>
+      <div class="method-content">
+        <div class="recipe-card">
+          <h3>Our Recipe</h3>
+          <dl class="recipe-specs">
+            <div class="spec-row"><dt>Coffee</dt><dd>120g (coarse, French press)</dd></div>
+            <div class="spec-row"><dt>Water</dt><dd>1L filtered, 4°C</dd></div>
+            <div class="spec-row"><dt>Ratio</dt><dd>1:8.3</dd></div>
+            <div class="spec-row"><dt>Time</dt><dd>18 hours</dd></div>
+            <div class="spec-row"><dt>Temp</dt><dd>4°C (fridge)</dd></div>
+            <div class="spec-row"><dt>Filter</dt><dd>Paper after metal</dd></div>
+          </dl>
+        </div>
+        <div class="steps-card">
+          <h3>Procedure</h3>
+          <ol class="brew-steps">
+            <li data-step="1"><span class="step-time">Night before</span><span class="step-action">Grind 120g coarse. Add to Toddy. Pour 1L cold filtered water.</span></li>
+            <li data-step="2"><span class="step-time">—</span><span class="step-action">Stir gently. All grounds wet. Cover. Refrigerate 18 hours.</span></li>
+            <li data-step="3"><span class="step-time">Next morning</span><span class="step-action">Drain through metal filter. Then paper. Bottle. Chill 2 hours.</span></li>
+            <li data-step="4"><span class="step-time">Serve</span><span class="step-action">Over one large cube. No dilution. Sip slow.</span></li>
+          </ol>
+        </div>
+        <div class="tips-card">
+          <h3>Diego's Notes</h3>
+          <ul class="tips-list">
+            <li>Cold water extracts different compounds. Sugars. Not acids.</li>
+            <li>18 hours is the sweet spot. 12 = weak. 24 = woody.</li>
+            <li>Paper filter after metal removes fines. Clarity without sediment.</li>
+            <li>We use the Guatemala Natural. Chocolate. Cherry. Molasses.</li>
+            <li>Served 12:00–17:00 only. After that, order espresso over ice.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="brew-panel" id="panel-aeropress" role="tabpanel" aria-labelledby="aeropress-title" hidden>
+      <header class="method-header">
+        <div class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v12M6 12h12"/></svg>
+        </div>
+        <div>
+          <h2 id="aeropress-title" class="method-name">AeroPress · Inverted Method</h2>
+          <p class="method-desc">Immersion + pressure. Versatile. Portable. The barista's travel companion.</p>
+          <div class="method-tags">
+            <span class="tag">Any Time</span>
+            <span class="tag">Any Roast</span>
+            <span class="tag">Balanced</span>
+            <span class="tag">Medium Skill</span>
+          </div>
+        </div>
+      </header>
+      <div class="method-content">
+        <div class="recipe-card">
+          <h3>Our Recipe (Championship)</h3>
+          <dl class="recipe-specs">
+            <div class="spec-row"><dt>Dose</dt><dd>16g</dd></div>
+            <div class="spec-row"><dt>Water</dt><dd>220g (1:13.75)</dd></div>
+            <div class="spec-row"><dt>Temp</dt><dd>90°C / 194°F</dd></div>
+            <div class="spec-row"><dt>Grind</dt><dd>Medium (kosher salt)</dd></div>
+            <div class="spec-row"><dt>Filter</dt><dd>2× paper, rinsed</dd></div>
+            <div class="spec-row"><dt>Time</dt><dd>1:45 total</dd></div>
+          </dl>
+        </div>
+        <div class="steps-card">
+          <h3>Procedure</h3>
+          <ol class="brew-steps">
+            <li data-step="1"><span class="step-time">0:00</span><span class="step-action">Inverted. 16g coffee. 220g water. Stir 10s. Cap with 2 rinsed papers.</span></li>
+            <li data-step="2"><span class="step-time">1:00</span><span class="step-action">Flip onto cup. Press slow. 30s press. Stop at hiss.</span></li>
+            <li data-step="3"><span class="step-time">1:45</span><span class="step-action">Swirl. Taste. Adjust next time.</span></li>
+          </ol>
+        </div>
+        <div class="tips-card">
+          <h3>Priya's Notes</h3>
+          <ul class="tips-list">
+            <li>Inverted = no premature drip. Full immersion control.</li>
+            <li>Two papers = zero fines. Clean cup. Rinse both.</li>
+            <li>Lower temp (90°C) = less bitterness, more sweetness.</li>
+            <li>This recipe won Portland AeroPress 2023. It's a starting point.</li>
+            <li>Change one variable. Taste. Repeat. That's the method.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="equipment" aria-labelledby="equip-title">
+      <h2 id="equip-title" class="section-title">What We Use</h2>
+      <div class="equip-grid">
+        <article class="equip-item">
+          <h3>Grinder</h3>
+          <p>Mahlkönig EK43 (filter) · Mahlkönig E65S (espresso)</p>
+        </article>
+        <article class="equip-item">
+          <h3>Kettle</h3>
+          <p>Fellow Stagg EKG Pro · 93°C hold</p>
+        </article>
+        <article class="equip-item">
+          <h3>Scale</h3>
+          <p>Acaia Pearl S · 0.1g resolution</p>
+        </article>
+        <article class="equip-item">
+          <h3>Water</h3>
+          <p>Custom remineralization · 150 TDS · 7.2 pH</p>
+        </article>
+        <article class="equip-item">
+          <h3>Espresso</h3>
+          <p>La Marzocco Linea PB · 3-group · PID</p>
+        </article>
+        <article class="equip-item">
+          <h3>Roaster</h3>
+          <p>Probat L12 · 12kg · Manual profile control</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark">⬤</span>
+        <span class="footer-name">VESPER</span>
+        <p class="footer-tagline">Coffee at the Right Hour</p>
+      </div>
+      <div class="footer-hours">
+        <h4>Hours</h4>
+        <dl>
+          <dt>Mon–Thu</dt><dd>06:30 – 20:00</dd>
+          <dt>Fri</dt><dd>06:30 – 22:00</dd>
+          <dt>Sat</dt><dd>07:00 – 22:00</dd>
+          <dt>Sun</dt><dd>08:00 – 18:00</dd>
+        </dl>
+      </div>
+      <div class="footer-contact">
+        <h4>Find Us</h4>
+        <address>
+          147 Cedar Street<br>
+          Portland, OR 97214<br>
+          <a href="tel:+15035550147">(503) 555-0147</a>
+        </address>
+      </div>
+      <div class="footer-note">
+        <h4>Principles</h4>
+        <ul>
+          <li>No syrups. No compromise.</li>
+          <li>Roasted in-house, weekly.</li>
+          <li>Cups stay. Lids on request.</li>
+          <li>Phones face down. Conversation up.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Vesper. Roasted with intention.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

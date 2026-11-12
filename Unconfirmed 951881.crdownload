@@ -1,0 +1,338 @@
+/**
+ * VESPER — Core Script
+ * Time-aware phase detection, navigation, interactive components
+ */
+
+(function() {
+  'use strict';
+
+  // ==========================================================================
+  // Phase System — Time-aware coffee rituals
+  // ==========================================================================
+  const PHASES = [
+    { id: 'dawn', label: 'Dawn', start: 5, end: 9, greeting: 'First light. First cup.', desc: 'Clarity in darkness. High caffeine. Low noise. The day begins here.', hours: '05:00 – 09:00' },
+    { id: 'morning', label: 'Morning', start: 9, end: 12, greeting: 'The ritual sharpens.', desc: 'Bright acidity. Clean extraction. Focus fuel. Pour-over hour.', hours: '09:00 – 12:00' },
+    { id: 'afternoon', label: 'Afternoon', start: 12, end: 17, greeting: 'The pace settles.', desc: 'Body over brightness. Immersion methods. Cold brew season. Conversation time.', hours: '12:00 – 17:00' },
+    { id: 'dusk', label: 'Dusk', start: 17, end: 22, greeting: 'The day exhales.', desc: 'Lower temp. Higher sweetness. Vinyl only. No laptops. Just presence.', hours: '17:00 – 22:00' }
+  ];
+
+  function getCurrentPhase() {
+    const hour = new Date().getHours();
+    return PHASES.find(p => hour >= p.start && hour < p.end) || PHASES[PHASES.length - 1];
+  }
+
+  function formatTime(date = new Date()) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  // ==========================================================================
+  // DOM References
+  // ==========================================================================
+  const timeValue = document.querySelector('.time-value');
+  const timePhase = document.querySelector('.time-phase');
+  const heroGreeting = document.getElementById('hero-greeting');
+  const currentPhaseEl = document.getElementById('current-phase');
+  const phaseTitle = document.getElementById('phase-title');
+  const phaseDesc = document.getElementById('phase-desc');
+  const phaseHours = document.getElementById('phase-hours');
+  const statusIndicator = document.getElementById('status-indicator');
+  const statusText = document.getElementById('status-text');
+  const seatsAvailable = document.getElementById('seats-available');
+  const currentMusic = document.getElementById('current-music');
+  const onDrip = document.getElementById('on-drip');
+  const espressoDial = document.getElementById('espresso-dial');
+  const methodTabs = document.querySelectorAll('.method-tab');
+  const brewPanels = document.querySelectorAll('.brew-panel');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const ritualCards = document.querySelectorAll('.ritual-card');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  // ==========================================================================
+  // Time & Phase Updates
+  // ==========================================================================
+  function updateTime() {
+    const now = new Date();
+    if (timeValue) timeValue.dateTime = now.toISOString();
+    if (timeValue) timeValue.textContent = formatTime(now);
+
+    const phase = getCurrentPhase();
+    if (timePhase) timePhase.textContent = `· ${phase.label}`;
+
+    // Update body phase for CSS variables
+    document.body.dataset.phase = phase.id;
+
+    // Home page phase content
+    if (heroGreeting) heroGreeting.textContent = phase.greeting;
+    if (currentPhaseEl) currentPhaseEl.textContent = phase.label;
+    if (phaseTitle) phaseTitle.textContent = `${phase.label} Ritual`;
+    if (phaseDesc) phaseDesc.textContent = phase.desc;
+    if (phaseHours) phaseHours.textContent = phase.hours;
+
+    // Live status simulation (Visit page)
+    updateLiveStatus(phase);
+  }
+
+  function updateLiveStatus(phase) {
+    if (!statusIndicator) return;
+
+    const isOpen = isCurrentlyOpen();
+    const dot = statusIndicator.querySelector('.status-dot');
+
+    if (isOpen) {
+      statusText.textContent = 'Open now';
+      dot.classList.add('open');
+    } else {
+      statusText.textContent = 'Closed';
+      dot.classList.remove('open');
+    }
+
+    // Simulated data
+    if (seatsAvailable) seatsAvailable.textContent = `${Math.floor(Math.random() * 8) + 2} of 18`;
+    if (currentMusic) currentMusic.textContent = getCurrentAlbum(phase);
+    if (onDrip) onDrip.textContent = getCurrentDrip(phase);
+    if (espressoDial) espressoDial.textContent = '18.5g · 37g · 28s';
+  }
+
+  function isCurrentlyOpen() {
+    const now = new Date();
+    const hour = now.getHours();
+    const day = now.getDay(); // 0 = Sun
+
+    if (day === 0) return hour >= 8 && hour < 18;
+    if (day === 5) return hour >= 6.5 && hour < 22; // Friday
+    if (day === 6) return hour >= 7 && hour < 22; // Saturday
+    return hour >= 6.5 && hour < 20; // Mon-Thu
+  }
+
+  function getCurrentAlbum(phase) {
+    const albums = {
+      dawn: ['Bill Evans — Sunday at the Village Vanguard', 'Nick Drake — Five Leaves Left', 'Grouper — Ruins'],
+      morning: ['Alice Coltrane — Journey in Satchidananda', 'Khruangbin — Mordechai', 'William Tyler — Modern Country'],
+      afternoon: ['Arthur Russell — World of Echo', 'Laraaji — Ambient 3', 'Green-House — Six Songs for Invisible Gardens'],
+      dusk: ['Miles Davis — In a Silent Way', 'Talk Talk — Spirit of Eden', 'The Durutti Column — The Return of the Durutti Column']
+    };
+    const list = albums[phase.id] || albums.dusk;
+    return list[Math.floor(Date.now() / 3600000) % list.length];
+  }
+
+  function getCurrentDrip(phase) {
+    const drips = {
+      dawn: 'Ethiopia Yirgacheffe · Kalita',
+      morning: 'Colombia Pink Bourbon · V60',
+      afternoon: 'Guatemala Natural · Cold Brew',
+      dusk: 'Brazil Fazenda · Kalita (decaf available)'
+    };
+    return drips[phase.id] || drips.dusk;
+  }
+
+  // Initial + interval
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // ==========================================================================
+  // Navigation Active State
+  // ==========================================================================
+  const currentPage = document.body.dataset.page;
+  navLinks.forEach(link => {
+    if (link.dataset.page === currentPage) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // ==========================================================================
+  // Brew Method Tabs
+  // ==========================================================================
+  methodTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const method = tab.dataset.method;
+
+      // Update tabs
+      methodTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      // Update panels
+      brewPanels.forEach(panel => {
+        if (panel.id === `panel-${method}`) {
+          panel.hidden = false;
+          panel.setAttribute('aria-hidden', 'false');
+        } else {
+          panel.hidden = true;
+          panel.setAttribute('aria-hidden', 'true');
+        }
+      });
+    });
+  });
+
+  // Keyboard support for tabs
+  methodTabs.forEach((tab, index) => {
+    tab.addEventListener('keydown', (e) => {
+      let newIndex = index;
+      if (e.key === 'ArrowRight') newIndex = (index + 1) % methodTabs.length;
+      else if (e.key === 'ArrowLeft') newIndex = (index - 1 + methodTabs.length) % methodTabs.length;
+      else if (e.key === 'Home') newIndex = 0;
+      else if (e.key === 'End') newIndex = methodTabs.length - 1;
+      else return;
+
+      e.preventDefault();
+      methodTabs[newIndex].focus();
+      methodTabs[newIndex].click();
+    });
+  });
+
+  // ==========================================================================
+  // Ritual Filters (Menu Page)
+  // ==========================================================================
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      filterBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      ritualCards.forEach(card => {
+        if (filter === 'all' || card.dataset.phase === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ==========================================================================
+  // Particle Canvas (Hero Atmosphere)
+  // ==========================================================================
+  const canvas = document.querySelector('.particles');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * devicePixelRatio;
+      canvas.height = rect.height * devicePixelRatio;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+
+    function createParticles() {
+      const count = Math.min(60, Math.floor(canvas.width / 20));
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width / devicePixelRatio,
+          y: Math.random() * canvas.height / devicePixelRatio,
+          r: Math.random() * 1.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.2,
+          vy: -Math.random() * 0.3 - 0.1,
+          opacity: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width / devicePixelRatio, canvas.height / devicePixelRatio);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.y < -10) {
+          p.y = canvas.height / devicePixelRatio + 10;
+          p.x = Math.random() * canvas.width / devicePixelRatio;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 168, 76, ${p.opacity})`;
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    function init() {
+      resize();
+      createParticles();
+      animate();
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      createParticles();
+    });
+
+    // Start only if not reduced motion
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      init();
+    }
+  }
+
+  // ==========================================================================
+  // Scroll Reveal (IntersectionObserver)
+  // ==========================================================================
+  const revealElements = document.querySelectorAll('.highlight-card, .journal-entry, .ritual-card, .philosophy-card, .journey-step, .person-card, .offering-card, .equip-item, .space-feature, .visit-main > section, .visit-sidebar > section');
+
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    revealElements.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out)';
+      observer.observe(el);
+    });
+  } else {
+    revealElements.forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+  }
+
+  // ==========================================================================
+  // Smooth Scroll for Anchor Links
+  // ==========================================================================
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+      }
+    });
+  });
+
+  // ==========================================================================
+  // Print Styles Enhancement
+  // ==========================================================================
+  window.addEventListener('beforeprint', () => {
+    document.body.classList.add('printing');
+  });
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('printing');
+  });
+
+})();

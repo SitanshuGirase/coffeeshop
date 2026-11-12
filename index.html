@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vesper — Coffee at the Right Hour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="home">
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="Vesper Home">
+      <span class="nav-mark">⬤</span>
+      <span class="nav-name">VESPER</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active" data-page="home">Entrance</a>
+      <a href="menu.html" class="nav-link" data-page="menu">Rituals</a>
+      <a href="story.html" class="nav-link" data-page="story">Lineage</a>
+      <a href="brew.html" class="nav-link" data-page="brew">Method</a>
+      <a href="visit.html" class="nav-link" data-page="visit">Find Us</a>
+    </div>
+    <div class="nav-time" aria-live="polite" aria-atomic="true">
+      <span class="time-label">It is</span>
+      <time class="time-value" datetime="">--:--</time>
+      <span class="time-phase"></span>
+    </div>
+  </nav>
+
+  <main class="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-atmosphere" aria-hidden="true">
+        <div class="steam steam-1"></div>
+        <div class="steam steam-2"></div>
+        <div class="steam steam-3"></div>
+        <canvas class="particles" aria-hidden="true"></canvas>
+      </div>
+      <div class="hero-content">
+        <p class="hero-greeting" id="hero-greeting"></p>
+        <h1 class="hero-title" id="hero-title">Coffee at the Right Hour</h1>
+        <p class="hero-subtitle">We don't serve coffee. We serve the moment it belongs to.</p>
+        <div class="hero-indicator">
+          <span class="indicator-dot" aria-hidden="true"></span>
+          <span class="indicator-text">Now serving: <strong id="current-phase">Morning Clarity</strong></span>
+        </div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="phase-card" aria-labelledby="phase-title">
+      <div class="phase-card-inner">
+        <h2 id="phase-title" class="phase-card-title"></h2>
+        <p class="phase-card-desc" id="phase-desc"></p>
+        <div class="phase-card-meta">
+          <span class="phase-hours" id="phase-hours"></span>
+          <a href="menu.html" class="phase-cta">Explore the Ritual →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="highlights" aria-labelledby="highlights-title">
+      <h2 id="highlights-title" class="section-title">Tonight's Offering</h2>
+      <div class="highlights-grid">
+        <article class="highlight-card" data-highlight="bean">
+          <div class="highlight-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/><path d="M12 6v12M6 12h12"/></svg>
+          </div>
+          <h3>Single Origin: Yirgacheffe</h3>
+          <p>Washed process. Jasmine, bergamot, clean lemon finish. Roasted 3 days ago.</p>
+          <span class="highlight-tag">Available until sold out</span>
+        </article>
+        <article class="highlight-card" data-highlight="method">
+          <div class="highlight-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v12M6 12h12"/></svg>
+          </div>
+          <h3>Today's Method: Kalita Wave</h3>
+          <p>Flat-bottom drip. Even extraction. Forgiving. Clarity in every cup.</p>
+          <span class="highlight-tag">Barista's choice</span>
+        </article>
+        <article class="highlight-card" data-highlight="atmosphere">
+          <div class="highlight-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 18a5 5 0 0 0-10 0"/><path d="M12 2v7"/><path d="M9 7h6"/><path d="M12 15v6"/></svg>
+          </div>
+          <h3>Evening Hours Extended</h3>
+          <p>Open until 22:00. Low light. Vinyl only. No laptops after 18:00.</p>
+          <span class="highlight-tag">Fridays only</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="journal-preview" aria-labelledby="journal-title">
+      <h2 id="journal-title" class="section-title">Field Notes</h2>
+      <div class="journal-grid">
+        <article class="journal-entry">
+          <time class="entry-date" datetime="2025-01-15">15 JAN</time>
+          <h3><a href="#">The Farmer Who Waited</a></h3>
+          <p>Luis in Huila waits 48 hours after picking before depulping. "The sugar migrates," he says. We taste it.</p>
+        </article>
+        <article class="journal-entry">
+          <time class="entry-date" datetime="2025-01-08">08 JAN</time>
+          <h3><a href="#">Why We Don't Do WiFi</a></h3>
+          <p>Connection isn't bandwidth. It's the steam rising. The ceramic weight. The stranger asking about your cup.</p>
+        </article>
+        <article class="journal-entry">
+          <time class="entry-date" datetime="2025-01-02">02 JAN</time>
+          <h3><a href="#">The 4:30 AM Roast</a></h3>
+          <p>First roast of the year. Cold beans, hot drum. The crack sounds different in January. Sharper. Promising.</p>
+        </article>
+      </div>
+      <a href="story.html" class="journal-more">Read Lineage →</a>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark">⬤</span>
+        <span class="footer-name">VESPER</span>
+        <p class="footer-tagline">Coffee at the Right Hour</p>
+      </div>
+      <div class="footer-hours">
+        <h4>Hours</h4>
+        <dl>
+          <dt>Mon–Thu</dt><dd>06:30 – 20:00</dd>
+          <dt>Fri</dt><dd>06:30 – 22:00</dd>
+          <dt>Sat</dt><dd>07:00 – 22:00</dd>
+          <dt>Sun</dt><dd>08:00 – 18:00</dd>
+        </dl>
+      </div>
+      <div class="footer-contact">
+        <h4>Find Us</h4>
+        <address>
+          147 Cedar Street<br>
+          Portland, OR 97214<br>
+          <a href="tel:+15035550147">(503) 555-0147</a>
+        </address>
+      </div>
+      <div class="footer-note">
+        <h4>Principles</h4>
+        <ul>
+          <li>No syrups. No compromise.</li>
+          <li>Roasted in-house, weekly.</li>
+          <li>Cups stay. Lids on request.</li>
+          <li>Phones face down. Conversation up.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Vesper. Roasted with intention.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

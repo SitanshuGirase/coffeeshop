@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rituals — Vesper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="menu">
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="Vesper Home">
+      <span class="nav-mark">⬤</span>
+      <span class="nav-name">VESPER</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link" data-page="home">Entrance</a>
+      <a href="menu.html" class="nav-link active" data-page="menu">Rituals</a>
+      <a href="story.html" class="nav-link" data-page="story">Lineage</a>
+      <a href="brew.html" class="nav-link" data-page="brew">Method</a>
+      <a href="visit.html" class="nav-link" data-page="visit">Find Us</a>
+    </div>
+    <div class="nav-time" aria-live="polite" aria-atomic="true">
+      <span class="time-label">It is</span>
+      <time class="time-value" datetime="">--:--</time>
+      <span class="time-phase"></span>
+    </div>
+  </nav>
+
+  <main class="main">
+    <header class="page-header">
+      <h1 class="page-title">Rituals</h1>
+      <p class="page-subtitle">Each cup has a time. Each method has a purpose.</p>
+    </header>
+
+    <section class="ritual-filters" aria-label="Filter rituals by time of day">
+      <button class="filter-btn active" data-filter="all" aria-pressed="true">All Hours</button>
+      <button class="filter-btn" data-filter="dawn" aria-pressed="false">Dawn <span class="filter-time">05–09</span></button>
+      <button class="filter-btn" data-filter="morning" aria-pressed="false">Morning <span class="filter-time">09–12</span></button>
+      <button class="filter-btn" data-filter="afternoon" aria-pressed="false">Afternoon <span class="filter-time">12–17</span></button>
+      <button class="filter-btn" data-filter="dusk" aria-pressed="false">Dusk <span class="filter-time">17–22</span></button>
+    </section>
+
+    <section class="rituals-grid" aria-labelledby="rituals-title" id="rituals-grid">
+      <!-- Populated by JS -->
+    </section>
+
+    <section class="ritual-philosophy" aria-labelledby="philosophy-title">
+      <h2 id="philosophy-title" class="section-title">How We Decide</h2>
+      <div class="philosophy-grid">
+        <article class="philosophy-card">
+          <h3>No Default</h3>
+          <p>We don't have a "house blend." Every bean is roasted for a specific ritual. The Kalita gets a lighter roast. The espresso gets development. The cold brew gets time.</p>
+        </article>
+        <article class="philosophy-card">
+          <h3>Temperature as Intent</h3>
+          <p>Dawn drinks are served at 68°C — hot enough to wake, cool enough to taste. Dusk drinks drop to 55°C. Sweetness emerges as heat retreats.</p>
+        </article>
+        <article class="philosophy-card">
+          <h3>Vessel Matters</h3>
+          <p>Wide rim for aroma (morning). Narrow for concentration (afternoon). Thick ceramic for heat retention (dawn). Thin glass for visual ceremony (dusk).</p>
+        </article>
+        <article class="philosophy-card">
+          <h3>No Takeaway After 17:00</h3>
+          <p>Evening coffee is for staying. The ritual completes in the cup, in the chair, in the conversation. Take a bag of beans home instead.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-mark">⬤</span>
+        <span class="footer-name">VESPER</span>
+        <p class="footer-tagline">Coffee at the Right Hour</p>
+      </div>
+      <div class="footer-hours">
+        <h4>Hours</h4>
+        <dl>
+          <dt>Mon–Thu</dt><dd>06:30 – 20:00</dd>
+          <dt>Fri</dt><dd>06:30 – 22:00</dd>
+          <dt>Sat</dt><dd>07:00 – 22:00</dd>
+          <dt>Sun</dt><dd>08:00 – 18:00</dd>
+        </dl>
+      </div>
+      <div class="footer-contact">
+        <h4>Find Us</h4>
+        <address>
+          147 Cedar Street<br>
+          Portland, OR 97214<br>
+          <a href="tel:+15035550147">(503) 555-0147</a>
+        </address>
+      </div>
+      <div class="footer-note">
+        <h4>Principles</h4>
+        <ul>
+          <li>No syrups. No compromise.</li>
+          <li>Roasted in-house, weekly.</li>
+          <li>Cups stay. Lids on request.</li>
+          <li>Phones face down. Conversation up.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Vesper. Roasted with intention.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

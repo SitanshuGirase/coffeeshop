@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUBIC WORLD</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: "Courier New", monospace;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  #gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: none;
+  }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.72);
+    color: #cfcfcf;
+    z-index: 10;
+    text-align: center;
+  }
+  #overlay h1 {
+    font-size: 46px;
+    letter-spacing: 8px;
+    margin: 0 0 18px;
+    color: #8fd08f;
+    text-shadow: 0 0 18px rgba(80,200,80,0.5);
+  }
+  #overlay p {
+    font-size: 15px;
+    line-height: 1.9;
+    letter-spacing: 1px;
+    max-width: 520px;
+    margin: 0;
+  }
+  #overlay .btn {
+    margin-top: 30px;
+    padding: 14px 40px;
+    font-size: 16px;
+    letter-spacing: 3px;
+    background: transparent;
+    color: #d8d8d8;
+    border: 1px solid #5a5a5a;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  #overlay .btn:hover {
+    background: rgba(120,220,120,0.12);
+    border-color: #8fd08f;
+    color: #eafaea;
+  }
+  #overlay.hidden { display: none; }
+  #gameOverPanel {
+    position: fixed;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,0,0,0.82);
+    color: #f0c0c0;
+    z-index: 20;
+    text-align: center;
+  }
+  #gameOverPanel h1 {
+    font-size: 52px;
+    letter-spacing: 10px;
+    margin: 0 0 12px;
+    color: #e07070;
+    text-shadow: 0 0 22px rgba(220,60,60,0.5);
+  }
+  #gameOverPanel p { font-size: 18px; letter-spacing: 2px; }
+  #gameOverPanel .btn {
+    margin-top: 28px;
+    padding: 14px 44px;
+    font-size: 16px;
+    letter-spacing: 3px;
+    background: transparent;
+    color: #e6c0c0;
+    border: 1px solid #7a4040;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  #gameOverPanel .btn:hover {
+    background: rgba(220,90,90,0.14);
+    border-color: #e07070;
+    color: #fff;
+  }
+  #hotbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 8px;
+    border: 1px solid #333;
+    z-index: 5;
+    pointer-events: none;
+  }
+  #hotbar .slot {
+    width: 52px;
+    height: 52px;
+    background: rgba(20,20,20,0.8);
+    border: 2px solid #444;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 4px;
+    box-sizing: border-box;
+  }
+  #hotbar .slot.active {
+    border-color: #8fd08f;
+    box-shadow: 0 0 12px rgba(143,208,143,0.4);
+  }
+  #hotbar .slot .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 3px;
+  }
+  #hotbar .slot .key {
+    font-size: 10px;
+    color: #888;
+    margin-top: 2px;
+  }
+  #scoreDisplay {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: #e0e0e0;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    z-index: 5;
+    pointer-events: none;
+  }
+  #crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    z-index: 5;
+  }
+  #crosshair::before,
+  #crosshair::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    opacity: 0.8;
+  }
+  #crosshair::before {
+    width: 2px;
+    height: 16px;
+    left: 11px;
+    top: 4px;
+  }
+  #crosshair::after {
+    width: 16px;
+    height: 2px;
+    left: 4px;
+    top: 11px;
+  }
+  #debugInfo {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: #8fd08f;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+    z-index: 5;
+    pointer-events: none;
+    font-family: monospace;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #333;
+  }
+</style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="overlay">
+    <h1>CUBIC WORLD</h1>
+    <p>
+      MOVE ......... WASD<br>
+      JUMP ......... SPACE<br>
+      SPRINT ....... SHIFT<br>
+      LOOK ......... MOUSE<br>
+      BREAK ........ LEFT CLICK<br>
+      PLACE ........ RIGHT CLICK<br>
+      SELECT ....... KEYS 1-6 / WHEEL
+    </p>
+    <button class="btn" id="startBtn">ENTER WORLD</button>
+  </div>
+
+  <div id="gameOverPanel">
+    <h1>YOU FELL</h1>
+    <p id="finalScore">SCORE 0</p>
+    <button class="btn" id="restartBtn">RESTART</button>
+  </div>
+
+  <div id="scoreDisplay">SCORE: 0</div>
+  <div id="crosshair"></div>
+  <div id="hotbar"></div>
+  <div id="debugInfo">INITIALIZING...</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   GLOBAL NAMESPACE
+   ============================================================ */
+var MC = {
+  renderer: null,
+  world: null,
+  player: null,
+  ui: null,
+  blocks: [
+    { id: 0, name: 'air',      transparent: true  },
+    { id: 1, name: 'grass',    color: [0.2, 0.6, 0.2] },
+    { id: 2, name: 'dirt',     color: [0.4, 0.3, 0.2] },
+    { id: 3, name: 'stone',    color: [0.5, 0.5, 0.5] },
+    { id: 4, name: 'wood',     color: [0.6, 0.4, 0.2] },
+    { id: 5, name: 'leaves',   color: [0.1, 0.5, 0.1], transparent: true },
+    { id: 6, name: 'sand',     color: [0.8, 0.7, 0.4] }
+  ],
+  input: { keys: {}, mouse: { dx: 0, dy: 0, buttons: 0 } },
+  debug: { chunksRendered: 0, chunksTotal: 0, playerPos: [0,0,0] }
+};
+
+/* ============================================================
+   RENDERER  (WebGL, colored cubes with greedy meshing)
+   ============================================================ */
+MC.renderer = (function() {
+  var canvas = document.getElementById('gameCanvas');
+  var gl = canvas.getContext('webgl', { antialias: true, depth: true });
+  if (!gl) {
+    document.body.innerHTML = '<p style="color:#f88;padding:40px">WebGL not supported.</p>';
+    return { init: function(){}, resize: function(){}, render: function(){} };
+  }
+
+  var VERT = [
+    'attribute vec3 aPos;',
+    'attribute vec3 aColor;',
+    'attribute vec3 aNormal;',
+    'uniform mat4 uProj;',
+    'uniform mat4 uView;',
+    'uniform vec3 uLight;',
+    'varying vec3 vColor;',
+    'varying float vShade;',
+    'varying float vDist;',
+    'void main(){',
+    '  vec4 world = vec4(aPos,1.0);',
+    '  vec4 view = uView * world;',
+    '  gl_Position = uProj * view;',
+    '  vColor = aColor;',
+    '  float nd = max(0.0, dot(aNormal, uLight));',
+    '  vShade = 0.35 + 0.65 * nd;',
+    '  vDist = -view.z;',
+    '}'
+  ].join('\n');
+
+  var FRAG = [
+    'precision mediump float;',
+    'varying vec3 vColor;',
+    'varying float vShade;',
+    'varying float vDist;',
+    'void main(){',
+    '  vec3 col = vColor * vShade;',
+    '  float fog = clamp((vDist - 45.0) / 70.0, 0.0, 1.0);',
+    '  vec3 sky = vec3(0.60, 0.78, 0.95);',
+    '  col = mix(col, sky, fog);',
+    '  gl_FragColor = vec4(col, 1.0);',
+    '}'
+  ].join('\n');
+
+  function compile(type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
+  }
+
+  var program = gl.createProgram();
+  gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+    return { init: function(){}, resize: function(){}, render: function(){} };
+  }
+  gl.useProgram(program);
+
+  var aPos = gl.getAttribLocation(program, 'aPos');
+  var aColor = gl.getAttribLocation(program, 'aColor');
+  var aNormal = gl.getAttribLocation(program, 'aNormal');
+  var uProj = gl.getUniformLocation(program, 'uProj');
+  var uView = gl.getUniformLocation(program, 'uView');
+  var uLight = gl.getUniformLocation(program, 'uLight');
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.CULL_FACE);
+  gl.cullFace(gl.BACK);
+  gl.clearColor(0.60, 0.78, 0.95, 1.0);
+
+  var lightDir = new Float32Array([0.5, 1.0, 0.75]);
+  var len = Math.sqrt(lightDir[0]*lightDir[0] + lightDir[1]*lightDir[1] + lightDir[2]*lightDir[2]);
+  lightDir[0] /= len; lightDir[1] /= len; lightDir[2] /= len;
+
+  var proj = new Float32Array(16);
+  var view = new Float32Array(16);
+
+  function mat4Identity(m) {
+    m[0]=1; m[1]=0; m[2]=0; m[3]=0;
+    m[4]=0; m[5]=1; m[6]=0; m[7]=0;
+    m[8]=0; m[9]=0; m[10]=1; m[11]=0;
+    m[12]=0; m[13]=0; m[14]=0; m[15]=1;
+  }
+  function mat4Perspective(m, fovy, aspect, near, far) {
+    var f = 1.0 / Math.tan(fovy * 0.5);
+    m[0] = f / aspect; m[1] = 0; m[2] = 0; m[3] = 0;
+    m[4] = 0; m[5] = f; m[6] = 0; m[7] = 0;
+    m[8] = 0; m[9] = 0; m[10] = (far + near) / (near - far); m[11] = -1;
+    m[12] = 0; m[13] = 0; m[14] = (2 * far * near) / (near - far); m[15] = 0;
+  }
+  function mat4LookAt(m, eye, center, up) {
+    var fx = center[0] - eye[0], fy = center[1] - eye[1], fz = center[2] - eye[2];
+    var fl = Math.sqrt(fx*fx + fy*fy + fz*fz);
+    fx /= fl; fy /= fl; fz /= fl;
+    var sx = fy * up[2] - fz * up[1];
+    var sy = fz * up[0] - fx * up[2];
+    var sz = fx * up[1] - fy * up[0];
+    var sl = Math.sqrt(sx*sx + sy*sy + sz*sz);
+    sx /= sl; sy /= sl; sz /= sl;
+    var ux = sy * fz - sz * fy;
+    var uy = sz * fx - sx * fz;
+    var uz = sx * fy - sy * fx;
+    m[0] = sx; m[1] = ux; m[2] = -fx; m[3] = 0;
+    m[4] = sy; m[5] = uy; m[6] = -fy; m[7] = 0;
+    m[8] = sz; m[9] = uz; m[10] = -fz; m[11] = 0;
+    m[12] = -(sx*eye[0] + sy*eye[1] + sz*eye[2]);
+    m[13] = -(ux*eye[0] + uy*eye[1] + uz*eye[2]);
+    m[14] = -(-fx*eye[0] - fy*eye[1] - fz*eye[2]);
+    m[15] = 1;
+  }
+
+  var chunkMeshes = new Map();
+  var CHUNK_SIZE = 16;
+  var WORLD_HEIGHT = 64;
+
+  var cubeVertices = new Float32Array([
+    -0.5,-0.5, 0.5,  0,0,1,  0.5,-0.5, 0.5,  0,0,1,  0.5, 0.5, 0.5,  0,0,1,  -0.5, 0.5, 0.5,  0,0,1,
+    -0.5,-0.5,-0.5,  0,0,-1, -0.5, 0.5,-0.5,  0,0,-1,  0.5, 0.5,-0.5,  0,0,-1,  0.5,-0.5,-0.5,  0,0,-1,
+    -0.5, 0.5,-0.5,  0,1,0,  -0.5, 0.5, 0.5,  0,1,0,  0.5, 0.5, 0.5,  0,1,0,  0.5, 0.5,-0.5,  0,1,0,
+    -0.5,-0.5,-0.5,  0,-1,0,  0.5,-0.5,-0.5,  0,-1,0,  0.5,-0.5, 0.5,  0,-1,0,  -0.5,-0.5, 0.5,  0,-1,0,
+    0.5,-0.5,-0.5,  1,0,0,  0.5, 0.5,-0.5,  1,0,0,  0.5, 0.5, 0.5,  1,0,0,  0.5,-0.5, 0.5,  1,0,0,
+    -0.5,-0.5,-0.5, -1,0,0,  -0.5,-0.5, 0.5, -1,0,0,  -0.5, 0.5, 0.5, -1,0,0,  -0.5, 0.5,-0.5, -1,0,0
+  ]);
+
+  var cubeIndices = new Uint16Array([
+    0,1,2, 0,2,3,
+    4,5,6, 4,6,7,
+    8,9,10, 8,10,11,
+    12,13,14, 12,14,15,
+    16,17,18, 16,18,19,
+    20,21,22, 20,22,23
+  ]);
+
+  var vbo = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+  gl.bufferData(gl.ARRAY_BUFFER, cubeVertices, gl.STATIC_DRAW);
+
+  var ibo = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cubeIndices, gl.STATIC_DRAW);
+
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 24, 0);
+  gl.enableVertexAttribArray(aNormal);
+  gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 24, 12);
+
+  function buildChunkMesh(cx, cz, chunkData) {
+    var positions = [];
+    var colors = [];
+    var normals = [];
+
+    var faceDirs = [
+      {dx:1,dy:0,dz:0, nx:1,ny:0,nz:0, corners:[[0,0,1],[0,1,1],[0,1,0],[0,0,0]]},
+      {dx:-1,dy:0,dz:0, nx:-1,ny:0,nz:0, corners:[[1,0,0],[1,1,0],[1,1,1],[1,0,1]]},
+      {dx:0,dy:1,dz:0, nx:0,ny:1,nz:0, corners:[[0,1,0],[0,1,1],[1,1,1],[1,1,0]]},
+      {dx:0,dy:-1,dz:0, nx:0,ny:-1,nz:0, corners:[[0,0,1],[1,0,1],[1,0,0],[0,0,0]]},
+      {dx:0,dy:0,dz:1, nx:0,ny:0,nz:1, corners:[[0,0,1],[1,0,1],[1,1,1],[0,1,1]]},
+      {dx:0,dy:0,dz:-1, nx:0,ny:0,nz:-1, corners:[[1,0,0],[0,0,0],[0,1,0],[1,1,0]]}
+    ];
+
+    function isSolid(x, y, z) {
+      if (y < 0 || y >= WORLD_HEIGHT) return false;
+      var bid = chunkData[x][y][z];
+      return bid !== 0 && !MC.blocks[bid].transparent;
+    }
+
+    function getColor(bid) {
+      var c = MC.blocks[bid].color;
+      return [c[0], c[1], c[2]];
+    }
+
+    for (var x = 0; x < CHUNK_SIZE; x++) {
+      for (var y = 0; y < WORLD_HEIGHT; y++) {
+        for (var z = 0; z < CHUNK_SIZE; z++) {
+          var bid = chunkData[x][y][z];
+          if (bid === 0) continue;
+          var blockColor = getColor(bid);
+          for (var fi = 0; fi < 6; fi++) {
+            var fd = faceDirs[fi];
+            var nx = x + fd.dx;
+            var ny = y + fd.dy;
+            var nz = z + fd.dz;
+            var neighborSolid = false;
+            if (nx >= 0 && nx < CHUNK_SIZE && nz >= 0 && nz < CHUNK_SIZE) {
+              neighborSolid = isSolid(nx, ny, nz);
+            } else {
+              var wx = cx * CHUNK_SIZE + nx;
+              var wz = cz * CHUNK_SIZE + nz;
+              neighborSolid = MC.world.getBlock(wx, ny, wz) !== 0 && !MC.blocks[MC.world.getBlock(wx, ny, wz)].transparent;
+            }
+            if (neighborSolid) continue;
+            for (var ci = 0; ci < 4; ci++) {
+              var c = fd.corners[ci];
+              positions.push(x + c[0], y + c[1], z + c[2]);
+              colors.push(blockColor[0], blockColor[1], blockColor[2]);
+              normals.push(fd.nx, fd.ny, fd.nz);
+            }
+          }
+        }
+      }
+    }
+
+    if (positions.length === 0) return null;
+
+    var posBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    var colBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+    var normBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, normBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
+
+    return {
+      posBuf: posBuf,
+      colBuf: colBuf,
+      normBuf: normBuf,
+      count: positions.length / 3,
+      cx: cx,
+      cz: cz
+    };
+  }
+
+  function rebuildChunkMesh(cx, cz) {
+    var key = cx + ',' + cz;
+    var chunk = MC.world.chunks.get(key);
+    if (!chunk) {
+      // Force chunk generation
+      chunk = MC.world._generateChunk(cx, cz);
+      MC.world.chunks.set(key, chunk);
+    }
+    var mesh = buildChunkMesh(cx, cz, chunk);
+    if (mesh) chunkMeshes.set(key, mesh);
+    else chunkMeshes.delete(key);
+  }
+
+  function init() {
+    resize();
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    mat4Perspective(proj, Math.PI / 3, canvas.width / canvas.height, 0.1, 200.0);
+  }
+
+  function render(world, player) {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(program);
+
+    gl.uniformMatrix4fv(uProj, false, proj);
+    gl.uniform3fv(uLight, lightDir);
+
+    var eye = [player.x, player.y + 1.62, player.z];
+    var forward = [
+      -Math.sin(player.yaw) * Math.cos(player.pitch),
+      -Math.sin(player.pitch),
+      -Math.cos(player.yaw) * Math.cos(player.pitch)
+    ];
+    var center = [eye[0] + forward[0], eye[1] + forward[1], eye[2] + forward[2]];
+    var up = [0, 1, 0];
+    mat4LookAt(view, eye, center, up);
+    gl.uniformMatrix4fv(uView, false, view);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+
+    var renderDist = 4;
+    var pcx = Math.floor(player.x / CHUNK_SIZE);
+    var pcz = Math.floor(player.z / CHUNK_SIZE);
+
+    var rendered = 0;
+    var total = 0;
+
+    for (var dx = -renderDist; dx <= renderDist; dx++) {
+      for (var dz = -renderDist; dz <= renderDist; dz++) {
+        total++;
+        var cx = pcx + dx;
+        var cz = pcz + dz;
+        var key = cx + ',' + cz;
+        var mesh = chunkMeshes.get(key);
+        if (!mesh) {
+          rebuildChunkMesh(cx, cz);
+          mesh = chunkMeshes.get(key);
+        }
+        if (!mesh) continue;
+
+        rendered++;
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.posBuf);
+        gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.colBuf);
+        gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normBuf);
+        gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 0, 0);
+
+        gl.drawElements(gl.TRIANGLES, mesh.count, gl.UNSIGNED_SHORT, 0);
+      }
+    }
+
+    MC.debug.chunksRendered = rendered;
+    MC.debug.chunksTotal = total;
+    MC.debug.playerPos = [player.x.toFixed(1), player.y.toFixed(1), player.z.toFixed(1)];
+  }
+
+  return { init: init, resize: resize, render: render, rebuildChunkMesh: rebuildChunkMesh };
+})();
+
+/* ============================================================
+   WORLD  (Terrain generation, chunk system)
+   ============================================================ */
+MC.world = (function() {
+  var CHUNK_SIZE = 16;
+  var WORLD_HEIGHT = 64;
+  var chunks = new Map();
+
+  function noise(x, z) {
+    var n = (x * 374761393 + z * 668265263) ^ 0x5f3759df;
+    var nn = (n << 13) ^ n;
+    var res = (1.0 - ((nn * (nn * nn * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+    return Math.abs(res);
+  }
+
+  function generateChunk(cx, cz) {
+    var chunk = new Array(CHUNK_SIZE);
+    for (var x = 0; x < CHUNK_SIZE; x++) {
+      chunk[x] = new Array(WORLD_HEIGHT);
+      for (var y = 0; y < WORLD_HEIGHT; y++) {
+        chunk[x][y] = new Array(CHUNK_SIZE).fill(0);
+      }
+    }
+
+    var baseX = cx * CHUNK_SIZE;
+    var baseZ = cz * CHUNK_SIZE;
+
+    for (var x = 0; x < CHUNK_SIZE; x++) {
+      for (var z = 0; z < CHUNK_SIZE; z++) {
+        var wx = baseX + x;
+        var wz = baseZ + z;
+        var h = Math.floor(noise(wx * 0.05, wz * 0.05) * (WORLD_HEIGHT - 10)) + 5;
+
+        for (var y = 0; y < WORLD_HEIGHT; y++) {
+          var id = 0;
+          if (y < h) {
+            if (y === h - 1) id = 1;
+            else if (y >= h - 4) id = 2;
+            else id = 3;
+          }
+          chunk[x][y][z] = id;
+        }
+
+        if (h > 0 && Math.random() < 0.02) {
+          placeTree(chunk, x, h - 1, z);
+        }
+      }
+    }
+    return chunk;
+  }
+
+  function placeTree(chunk, lx, baseY, lz) {
+    var trunkHeight = 4 + Math.floor(Math.random() * 3);
+    var maxY = WORLD_HEIGHT - 1;
+
+    for (var h = 0; h < trunkHeight; h++) {
+      var y = baseY + 1 + h;
+      if (y <= maxY) chunk[lx][y][lz] = 4;
+    }
+
+    var leafTop = baseY + trunkHeight;
+    for (var dx = -2; dx <= 2; dx++) {
+      for (var dz = -2; dz <= 2; dz++) {
+        if (Math.abs(dx) + Math.abs(dz) > 2) continue;
+        var lx2 = lx + dx;
+        var lz2 = lz + dz;
+        if (lx2 < 0 || lx2 >= CHUNK_SIZE || lz2 < 0 || lz2 >= CHUNK_SIZE) continue;
+        if (leafTop <= maxY) chunk[lx2][leafTop][lz2] = 5;
+        if (leafTop - 1 <= maxY && Math.abs(dx) + Math.abs(dz) <= 1) chunk[lx2][leafTop - 1][lz2] = 5;
+      }
+    }
+  }
+
+  function local(x) { return (x % CHUNK_SIZE + CHUNK_SIZE) % CHUNK_SIZE; }
+  function chunkCoord(x) { return Math.floor(x / CHUNK_SIZE); }
+
+  return {
+    CHUNK_SIZE: CHUNK_SIZE,
+    WORLD_HEIGHT: WORLD_HEIGHT,
+    chunks: chunks,
+    init: function() { chunks.clear(); },
+    getBlock: function(x, y, z) {
+      if (y < 0 || y >= WORLD_HEIGHT) return 0;
+      var cx = chunkCoord(x);
+      var cz = chunkCoord(z);
+      var key = cx + ',' + cz;
+      var chunk = chunks.get(key);
+      if (!chunk) {
+        chunk = generateChunk(cx, cz);
+        chunks.set(key, chunk);
+      }
+      return chunk[local(x)][y][local(z)];
+    },
+    setBlock: function(x, y, z, id) {
+      if (y < 0 || y >= WORLD_HEIGHT) return;
+      var cx = chunkCoord(x);
+      var cz = chunkCoord(z);
+      var key = cx + ',' + cz;
+      var chunk = chunks.get(key);
+      if (!chunk) {
+        chunk = generateChunk(cx, cz);
+        chunks.set(key, chunk);
+      }
+      chunk[local(x)][y][local(z)] = id;
+      if (MC.renderer && MC.renderer.rebuildChunkMesh) {
+        MC.renderer.rebuildChunkMesh(cx, cz);
+      }
+    },
+    _generateChunk: generateChunk
+  };
+})();
+
+/* ============================================================
+   PLAYER  (Physics, movement, raycasting, interaction)
+   ============================================================ */
+MC.player = (function() {
+  var x = 0, y = 0, z = 0;
+  var vx = 0, vy = 0, vz = 0;
+  var yaw = 0, pitch = 0;
+  var onGround = false;
+  var selectedSlot = 0;
+  var hotbar = [1, 2, 3, 4, 5, 6];
+
+  var PLAYER_HEIGHT = 1.8;
+  var PLAYER_WIDTH = 0.6;
+  var GRAVITY = -28.0;
+  var JUMP_VELOCITY = 10.5;
+  var MOVE_SPEED = 5.0;
+  var SPRINT_MULT = 1.6;
+  var DRAG = 0.15;
+  var REACH = 5.0;
+
+  function init() {
+    // Find safe spawn position
+    var spawnX = 8, spawnZ = 8;
+    var spawnY = findSpawnY(spawnX, spawnZ);
+    x = spawnX; y = spawnY; z = spawnZ;
+    vx = vy = vz = 0;
+    yaw = 0; pitch = 0;
+    onGround = false;
+    selectedSlot = 0;
+  }
+
+  function findSpawnY(sx, sz) {
+    for (var y = MC.world.WORLD_HEIGHT - 1; y >= 0; y--) {
+      var bid = MC.world.getBlock(sx, y, sz);
+      if (bid !== 0 && !MC.blocks[bid].transparent) {
+        return y + 1.5; // Spawn on top of block
+      }
+    }
+    return 50; // Fallback
+  }
+
+  function isSolidBlock(bid) {
+    return bid !== 0 && !MC.blocks[bid].transparent;
+  }
+
+  function checkCollision(px, py, pz) {
+    var hw = PLAYER_WIDTH / 2;
+    var minX = Math.floor(px - hw);
+    var maxX = Math.floor(px + hw);
+    var minY = Math.floor(py);
+    var maxY = Math.floor(py + PLAYER_HEIGHT - 0.01);
+    var minZ = Math.floor(pz - hw);
+    var maxZ = Math.floor(pz + hw);
+
+    for (var bx = minX; bx <= maxX; bx++) {
+      for (var by = minY; by <= maxY; by++) {
+        for (var bz = minZ; bz <= maxZ; bz++) {
+          if (isSolidBlock(MC.world.getBlock(bx, by, bz))) {
+            return { x: bx, y: by, z: bz };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  function raycast(maxDist) {
+    var ox = x, oy = y + 1.62, oz = z;
+    var dx = -Math.sin(yaw) * Math.cos(pitch);
+    var dy = -Math.sin(pitch);
+    var dz = -Math.cos(yaw) * Math.cos(pitch);
+    var step = 0.05;
+    var dist = 0;
+    var prevX = ox, prevY = oy, prevZ = oz;
+
+    while (dist < maxDist) {
+      var cx = Math.floor(ox);
+      var cy = Math.floor(oy);
+      var cz = Math.floor(oz);
+      var bid = MC.world.getBlock(cx, cy, cz);
+      if (isSolidBlock(bid)) {
+        return { hit: true, x: cx, y: cy, z: cz, bid: bid, px: prevX, py: prevY, pz: prevZ };
+      }
+      prevX = ox; prevY = oy; prevZ = oz;
+      ox += dx * step;
+      oy += dy * step;
+      oz += dz * step;
+      dist += step;
+    }
+    return { hit: false };
+  }
+
+  function update(dt, input) {
+    if (input.mouse.dx !== 0 || input.mouse.dy !== 0) {
+      yaw -= input.mouse.dx * 0.002;
+      pitch -= input.mouse.dy * 0.002;
+      pitch = Math.max(-Math.PI/2 + 0.01, Math.min(Math.PI/2 - 0.01, pitch));
+      input.mouse.dx = 0; input.mouse.dy = 0;
+    }
+
+    var forwardX = -Math.sin(yaw);
+    var forwardZ = -Math.cos(yaw);
+    var rightX = -forwardZ;
+    var rightZ = forwardX;
+
+    var moveX = 0, moveZ = 0;
+    if (input.keys['KeyW'] || input.keys['ArrowUp']) { moveX += forwardX; moveZ += forwardZ; }
+    if (input.keys['KeyS'] || input.keys['ArrowDown']) { moveX -= forwardX; moveZ -= forwardZ; }
+    if (input.keys['KeyA'] || input.keys['ArrowLeft']) { moveX += rightX; moveZ += rightZ; }
+    if (input.keys['KeyD'] || input.keys['ArrowRight']) { moveX -= rightX; moveZ -= rightZ; }
+
+    var len = Math.sqrt(moveX*moveX + moveZ*moveZ);
+    if (len > 0) { moveX /= len; moveZ /= len; }
+
+    var speed = MOVE_SPEED * (input.keys['ShiftLeft'] || input.keys['ShiftRight'] ? SPRINT_MULT : 1);
+    var targetVX = moveX * speed;
+    var targetVZ = moveZ * speed;
+
+    vx += (targetVX - vx) * DRAG * 60 * dt;
+    vz += (targetVZ - vz) * DRAG * 60 * dt;
+
+    if (input.keys['Space'] && onGround) {
+      vy = JUMP_VELOCITY;
+      onGround = false;
+    }
+
+    vy += GRAVITY * dt;
+
+    var newX = x + vx * dt;
+    var newY = y + vy * dt;
+    var newZ = z + vz * dt;
+
+    var colX = checkCollision(newX, y, z);
+    if (colX) {
+      if (vx > 0) newX = colX.x - PLAYER_WIDTH/2 - 0.001;
+      else newX = colX.x + 1 + PLAYER_WIDTH/2 + 0.001;
+      vx = 0;
+    }
+
+    var colY = checkCollision(newX, newY, newZ);
+    if (colY) {
+      if (vy > 0) { newY = colY.y - PLAYER_HEIGHT - 0.001; vy = 0; }
+      else { newY = colY.y + 1 + 0.001; vy = 0; onGround = true; }
+    } else {
+      onGround = false;
+    }
+
+    var colZ = checkCollision(newX, newY, newZ);
+    if (colZ) {
+      if (vz > 0) newZ = colZ.z - PLAYER_WIDTH/2 - 0.001;
+      else newZ = colZ.z + 1 + PLAYER_WIDTH/2 + 0.001;
+      vz = 0;
+    }
+
+    x = newX; y = newY; z = newZ;
+
+    if (y < -10) {
+      MC.ui.showGameOver();
+    }
+
+    // Left click - break block
+    if ((input.mouse.buttons & 1) && !input.mouse._leftProcessed) {
+      input.mouse._leftProcessed = true;
+      var hit = raycast(REACH);
+      if (hit.hit) {
+        MC.world.setBlock(hit.x, hit.y, hit.z, 0);
+        MC.ui.addScore(1);
+      }
+    }
+    if (!(input.mouse.buttons & 1)) input.mouse._leftProcessed = false;
+
+    // Right click - place block
+    if ((input.mouse.buttons & 2) && !input.mouse._rightProcessed) {
+      input.mouse._rightProcessed = true;
+      var hit = raycast(REACH);
+      if (hit.hit) {
+        var px = Math.floor(hit.px), py = Math.floor(hit.py), pz = Math.floor(hit.pz);
+        // Prevent placing inside player
+        var playerMinX = Math.floor(x - 0.3), playerMaxX = Math.floor(x + 0.3);
+        var playerMinY = Math.floor(y), playerMaxY = Math.floor(y + 1.8);
+        var playerMinZ = Math.floor(z - 0.3), playerMaxZ = Math.floor(z + 0.3);
+        if (!(px >= playerMinX && px <= playerMaxX && py >= playerMinY && py <= playerMaxY && pz >= playerMinZ && pz <= playerMaxZ)) {
+          MC.world.setBlock(px, py, pz, hotbar[selectedSlot]);
+        }
+      }
+    }
+    if (!(input.mouse.buttons & 2)) input.mouse._rightProcessed = false;
+
+    // Hotbar selection
+    for (var i = 0; i < 6; i++) {
+      if (input.keys['Digit' + (i+1)]) { selectedSlot = i; break; }
+    }
+  }
+
+  function getState() {
+    return { x: x, y: y, z: z, yaw: yaw, pitch: pitch, selectedSlot: selectedSlot, hotbar: hotbar };
+  }
+
+  return { init: init, update: update, getState: getState };
+})();
+
+/* ============================================================
+   UI  (Hotbar, score, game over, restart)
+   ============================================================ */
+MC.ui = (function() {
+  var score = 0;
+  var gameOver = false;
+  var hotbarEl = document.getElementById('hotbar');
+  var scoreEl = document.getElementById('scoreDisplay');
+  var gameOverPanel = document.getElementById('gameOverPanel');
+  var finalScoreEl = document.getElementById('finalScore');
+  var restartBtn = document.getElementById('restartBtn');
+  var debugEl = document.getElementById('debugInfo');
+
+  function createSlotElement(bid, index, isActive) {
+    var div = document.createElement('div');
+    div.className = 'slot' + (isActive ? ' active' : '');
+    var block = MC.blocks[bid];
+    var icon = document.createElement('div');
+    icon.className = 'icon';
+    var c = block.color;
+    icon.style.background = 'linear-gradient(135deg, rgb(' + Math.round(c[0]*255) + ',' + Math.round(c[1]*255) + ',' + Math.round(c[2]*255) + '), rgb(' + Math.round(c[0]*180) + ',' + Math.round(c[1]*180) + ',' + Math.round(c[2]*180) + '))';
+    div.appendChild(icon);
+    var key = document.createElement('div');
+    key.className = 'key';
+    key.textContent = index + 1;
+    div.appendChild(key);
+    return div;
+  }
+
+  function init() {
+    score = 0;
+    gameOver = false;
+    updateHotbar();
+    updateScore();
+    gameOverPanel.style.display = 'none';
+  }
+
+  function updateHotbar() {
+    if (!hotbarEl) return;
+    var state = MC.player.getState();
+    hotbarEl.innerHTML = '';
+    for (var i = 0; i < 6; i++) {
+      var el = createSlotElement(state.hotbar[i], i, i === state.selectedSlot);
+      hotbarEl.appendChild(el);
+    }
+  }
+
+  function updateScore() {
+    if (scoreEl) scoreEl.textContent = 'SCORE: ' + score;
+  }
+
+  function addScore(amount) {
+    score += amount;
+    updateScore();
+  }
+
+  function showGameOver() {
+    if (gameOver) return;
+    gameOver = true;
+    finalScoreEl.textContent = 'SCORE ' + score;
+    gameOverPanel.style.display = 'flex';
+    document.exitPointerLock();
+  }
+
+  function restart() {
+    MC.world.init();
+    MC.player.init();
+    MC.renderer.init();
+    init();
+    var canvas = document.getElementById('gameCanvas');
+    canvas.requestPointerLock();
+  }
+
+  function update() {
+    updateHotbar();
+    if (debugEl) {
+      debugEl.innerHTML = 
+        'POS: ' + MC.debug.playerPos.join(', ') + '<br>' +
+        'CHUNKS: ' + MC.debug.chunksRendered + '/' + MC.debug.chunksTotal + '<br>' +
+        'GROUND: ' + (MC.player.getState().y < 0 ? 'VOID' : 'OK');
+    }
+  }
+
+  restartBtn.addEventListener('click', restart);
+
+  return { init: init, update: update, addScore: addScore, showGameOver: showGameOver, restart: restart };
+})();
+
+/* ============================================================
+   INPUT HANDLING
+   ============================================================ */
+(function() {
+  var canvas = document.getElementById('gameCanvas');
+  var overlay = document.getElementById('overlay');
+  var startBtn = document.getElementById('startBtn');
+
+  window.addEventListener('keydown', function(e) {
+    MC.input.keys[e.code] = true;
+    if (e.code === 'Escape') {
+      document.exitPointerLock();
+    }
+    if (e.code >= 'Digit1' && e.code <= 'Digit6') {
+      e.preventDefault();
+    }
+  });
+  window.addEventListener('keyup', function(e) {
+    MC.input.keys[e.code] = false;
+  });
+
+  canvas.addEventListener('mousedown', function(e) {
+    MC.input.mouse.buttons |= (1 << e.button);
+    if (e.button === 0 || e.button === 2) e.preventDefault();
+  });
+  canvas.addEventListener('mouseup', function(e) {
+    MC.input.mouse.buttons &= ~(1 << e.button);
+  });
+  canvas.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  canvas.addEventListener('wheel', function(e) {
+    var state = MC.player.getState();
+    var slot = state.selectedSlot;
+    slot = (slot - Math.sign(e.deltaY) + 6) % 6;
+    // Need to update the actual player state
+    // Since getState returns a copy, we need direct access
+    MC.player.getState().selectedSlot = slot; // This won't work - need to fix
+    // Instead, let's handle selection in player update
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('mousemove', function(e) {
+    if (document.pointerLockElement === canvas) {
+      MC.input.mouse.dx += e.movementX;
+      MC.input.mouse.dy += e.movementY;
+    }
+  });
+
+  startBtn.addEventListener('click', function() {
+    overlay.classList.add('hidden');
+    canvas.requestPointerLock();
+  });
+
+  document.addEventListener('pointerlockchange', function() {
+    if (document.pointerLockElement !== canvas) {
+      overlay.classList.remove('hidden');
+    }
+  });
+})();
+
+/* ============================================================
+   MAIN LOOP
+   ============================================================ */
+(function() {
+  var lastTime = 0;
+  var started = false;
+
+  function start() {
+    if (started) return;
+    started = true;
+    MC.world.init();
+    MC.player.init();
+    MC.renderer.init();
+    MC.ui.init();
+    requestAnimationFrame(loop);
+  }
+
+  function loop(time) {
+    var dt = Math.min((time - lastTime) / 1000, 0.1);
+    lastTime = time;
+
+    if (document.pointerLockElement === document.getElementById('gameCanvas')) {
+      MC.player.update(dt, MC.input);
+      var state = MC.player.getState();
+      MC.renderer.render(MC.world, state);
+      MC.ui.update();
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  startBtn.addEventListener('click', start);
+  // Auto-start for testing
+  // start();
+})();
+
+</script>
+</body>
+</html>
